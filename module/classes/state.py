@@ -190,7 +190,7 @@ class PlugState(State):
                               PLUG_MESSAGE, MESSAGE_COLOR))
 
     def run(self) -> State:
-        self.init_clock(LevelMenuTick)
+        self.init_clock(PlugTick)
         self._draw()
         while running:
             for e in pygame.event.get():

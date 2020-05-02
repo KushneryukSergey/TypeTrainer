@@ -30,7 +30,7 @@ def check():
 
 def main():
     init_game()
-    game = Game(PlugState())  # by default game starts in main menu, cut-scene at first play can be added
+    game = Game()  # by default game starts in main menu, cut-scene at first play can be added
     while 1:  # main cycle of program
         game.process()
 

@@ -29,11 +29,11 @@ PLUG_UNDONE_BACKGROUND = 'image/background/plug_undone_bg.jpg'
 
 # running constants
 running = True
-
 MainMenuTick = 50
 LevelMenuTick = 50
 PauseMenuTick = 50
 LevelTick = 200
+PlugTick = 50
 
 # Messages
 PLUG_MESSAGE = ["Sorry, this place isn't ready",
