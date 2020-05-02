@@ -5,18 +5,14 @@ from pygame import *
 class Enemy(ABC):
     _speed = None
     _name = None
+    _x = None
+    _y = None
 
     def move(self):
         pass
 
     def draw(self):
         pass
-
-
-class NormalEnemy(Enemy):
-    def __init__(self, name: str, speed: float):
-        self._name = name
-        self._speed = speed
 
 
 class FastEnemy(Enemy):
@@ -26,12 +22,6 @@ class FastEnemy(Enemy):
 
 
 class MotherEnemy(Enemy):
-    def __init__(self, name: str, speed: float):
-        self._name = name
-        self._speed = speed
-
-
-class NormalEnemy(Enemy):
     def __init__(self, name: str, speed: float):
         self._name = name
         self._speed = speed
@@ -47,3 +37,7 @@ class BossEnemy(Enemy):
     def __init__(self, name: str, speed: float):
         self._name = name
         self._speed = speed
+
+
+def draw_enemies(enemies) -> None:
+    pass
