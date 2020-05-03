@@ -3,9 +3,5 @@ from pygame import *
 
 
 class Command(ABC):
-    def __init__(self, keyword):
-        self._keyword = keyword
-
-    @property
-    def keyword(self):
-        return self._keyword
+    def __init__(self):
+        pass

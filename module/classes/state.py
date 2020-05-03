@@ -1,9 +1,13 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Optional
 import pygame
+import random
+import copy
 from pygame import *
 from module.constant import *
-from module.action.game_options import surface
+from module.classes.objects import *
+from module.classes.enemy import *
+from module.action.game_options import get_level, set_level, surface
 
 
 class Game:
@@ -27,32 +31,6 @@ class State(ABC):
         if self._clock is None:
             self._clock = time.Clock()
         self._clock.tick_busy_loop(state_tick)
-
-
-class Button:
-    _font = None
-
-    def __init__(self, x, y, width, height, text, base_color, select_color):
-        if not Button._font:
-            pygame.font.init()
-            Button._font = pygame.font.SysFont(BUTTON_FONT, BUTTON_FONT_SIZE)
-        self._x = x
-        self._y = y
-        self._base_color = base_color
-        self._select_color = select_color
-        self._width = width
-        self._height = height
-        self._text = text
-        self._text_surface = Button._font.render(self._text, 1, (0, 0, 0))
-        text_sizes = Button._font.size(self._text)
-        self._text_pos = (self._x + (BUTTON_WIDTH - text_sizes[0])//2,
-                          self._y + (BUTTON_HEIGHT - text_sizes[1])//2)
-
-    def draw(self, selected):
-        pygame.draw.rect(surface(),
-                         self._select_color if selected else self._base_color,
-                         (self._x, self._y, self._width, self._height))
-        surface().blit(self._text_surface, self._text_pos)
 
 
 class MainMenuState(State, object):
@@ -127,8 +105,9 @@ class LevelMenuState(State):
                         self._selection = (self._selection + 1) % len(self._buttons)
                         self._draw()
                     if e.key == K_RETURN:
-                        if self._selection == 0:
-                            return LevelMenuState()
+                        if self._selection < len(LEVELS):
+                            set_level(LEVELS[self._selection])
+                            return LevelState()
                         else:
                             return PlugState()
 
@@ -140,42 +119,145 @@ class LevelMenuState(State):
 
 
 class LevelState(State):
-    def run(self):
-        # отрисовка данного уровня, возможность поставить на паузу
-        return self
+    _commands = []
+    _command_index = 0
+    _target = None
+    _win_status = False
+    _lose_status = False
+    _win_message: Message = None
+    _lose_message: Message = None
+    _last_moment: int = None
+    _clock: pygame.time.Clock() = None
+
+    def __init__(self):
+        super().__init__()
+        self._last_moment = pygame.time.get_ticks()
+        self._build_level(get_level())
+
+    def _build_level(self, level):
+        if not self._commands:
+            self._last_moment = pygame.time.get_ticks()
+            self._clock = pygame.time.Clock()
+            self._background = image.load(level["background"])
+            self._commands = copy.deepcopy(level["commands"])
+            self._command_index = 0
+            self._enemies = []
+
+    def _clear_level(self):
+        self._background = ""
+        self._commands = None
+        self._target = None
+        self._win_status = False
+        self._lose_status = False
+        self._enemies = []
+
+    def run(self) -> State:
+        self.init_clock(LevelTick)
+        a = 0
+        print(LEVEL1["commands"][0]["time"])
+        while running:
+            self._draw()
+            if self._command_index < len(self._commands):
+                if self._commands[self._command_index]["command"] == "delay":
+                    new_moment = pygame.time.get_ticks()
+                    if self._commands[self._command_index]["time"] <= new_moment - self._last_moment:
+                        self._command_index += 1
+                    else:
+                        self._commands[self._command_index]["time"] -= new_moment - self._last_moment
+                    self._last_moment = new_moment
+                elif self._commands[self._command_index]["command"] == "enemy":
+                    self._add_enemy(self._commands[self._command_index]["type"],
+                                    self._commands[self._command_index]["name"],
+                                    random.randint(100, 550), 0)
+                    self._command_index += 1
+
+            for e in pygame.event.get():
+                if e.type == QUIT:
+                    self._clear_level()
+                    return ExitState()
+                elif (self._win_status or self._lose_status) and e.type == pygame.KEYDOWN:
+                    self._clear_level()
+                    return LevelMenuState()
+                elif e.type == pygame.KEYDOWN:
+                    if e.key == K_ESCAPE:
+                        return PauseMenuState()
+                    letter = pygame.key.name(e.key)
+                    if self._target is None:
+                        for enemy in self._enemies:
+                            if enemy.check_touch(letter):
+                                self._target = enemy
+                                break
+                    if self._target is not None:
+                        self._target.update(letter)
+                        self._target.update(" ")
+                        if self._target.is_killed:
+                            self._enemies.remove(self._target)
+                            self._target = None
+            self._draw()
+            self._clock.tick()
+
+    def _draw(self):
+        self._update()
+        surface().blit(self._background, (0, 0))
+        for enemy in self._enemies:
+            if self._target is not enemy:
+                enemy.draw()
+        if self._target is not None:
+            self._target.draw()
+        if self._win_status:
+            self._win_message.draw()
+        if self._lose_status:
+            self._lose_message.draw()
+        pygame.display.update()
+
+    def _check_status(self):
+        if self._win_status:
+            if self._win_message is None:
+                self._win_message = Message(MESSAGE_X_COORD, 200, MESSAGE_WIDTH, WIN_MESSAGE, (255, 165, 0))
+        if self._lose_status:
+            if self._lose_message is None:
+                self._lose_message = Message(MESSAGE_X_COORD, 200, MESSAGE_WIDTH, LOSE_MESSAGE, (0, 0, 0))
+
+    def _update(self):
+        self._lose_status = any(enemy.update() for enemy in self._enemies)
+        self._win_status = not len(self._enemies) and self._command_index == len(self._commands)
+        self._check_status()
+
+    def _add_enemy(self, enemy, name, x_pos, y_pos):
+        if enemy == "normal":
+            self._enemies.append(NormalEnemy(name, x_pos, y_pos))
+        if enemy == "mini":
+            self._enemies.append(MiniEnemy(name, x_pos, y_pos))
+
+    def return_to_menu(self):
+        self._clear_level()
 
 
 class PauseMenuState(State):
-    def run(self):
-        # режим паузы с возможностью выйти из уровня или вернуться в игру
-        return MainMenuState()
+    def __init__(self):
+        super().__init__()
+        self._messages = []
+        self._background = image.load(PLUG_UNDONE_BACKGROUND)
+        self._messages.append(Message(MESSAGE_X_COORD, 400, MESSAGE_WIDTH, PAUSE_MESSAGE))
 
+    def run(self) -> State:
+        self.init_clock(PauseMenuTick)
+        self._draw()
+        while running:
+            for e in pygame.event.get():
+                if e.type == QUIT:
+                    return ExitState()
+                if e.type == pygame.KEYDOWN:
+                    if e.key == K_ESCAPE:
+                        LevelState().return_to_menu()
+                        return LevelMenuState()
+                    return LevelState()
 
-class Message:
-    _font = None
-
-    def __init__(self, x, y, width, text, base_color):
-        if not Message._font:
-            pygame.font.init()
-            Message._font = pygame.font.SysFont(MESSAGE_FONT, MESSAGE_FONT_SIZE)
-        self._x = x
-        self._y = y
-        self._base_color = base_color
-        self._width = width
-        self._text = text
-        self._text_surfaces = [Message._font.render(line, 1, (255, 255, 255)) for line in self._text]
-        text_sizes = [Message._font.size(line) for line in self._text]
-        self._text_poss = [(self._x + (BUTTON_WIDTH - text_sizes[i][0])//2,
-                           self._y + (2*i+1) * MESSAGE_FONT_SIZE)
-                           for i in range(len(text_sizes))]
-        self._height = MESSAGE_FONT_SIZE * (2*len(text)+1)
-
-    def draw(self, selected):
-        pygame.draw.rect(surface(),
-                         self._base_color,
-                         (self._x, self._y, self._width, self._height))
-        for ts, ts_pos in zip(self._text_surfaces, self._text_poss):
-            surface().blit(ts, ts_pos)
+    def _draw(self):
+        surface().blit(self._background, (0, 0))
+        for i in range(len(self._messages)):
+            self._messages[i].draw()
+        pygame.display.update()
 
 
 class PlugState(State):
@@ -183,11 +265,10 @@ class PlugState(State):
 
     def __init__(self):
         super().__init__()
-        self._selection = 0
         self._messages = []
         self._background = image.load(PLUG_UNDONE_BACKGROUND)
         self._messages.append(Message(MESSAGE_X_COORD, 400, MESSAGE_WIDTH,
-                              PLUG_MESSAGE, MESSAGE_COLOR))
+                                      PLUG_MESSAGE, MESSAGE_COLOR))
 
     def run(self) -> State:
         self.init_clock(PlugTick)
@@ -202,12 +283,13 @@ class PlugState(State):
     def _draw(self):
         surface().blit(self._background, (0, 0))
         for i in range(len(self._messages)):
-            self._messages[i].draw(self._selection == i)
+            self._messages[i].draw()
         pygame.display.update()
 
 
 # Это состояние нужно чтобы просто выходить из игры.
-# Тогда здесь перед закрытием можно корректно сохранить все необходимое
+# Тогда здесь перед закрытием можно корректно сохранить
+# все необходимое (статистику, прошел ли игрок обучение и тп)
 class ExitState(State):
     def run(self):
         raise SystemExit("Thank you for playing my game!!!")
@@ -226,5 +308,3 @@ class Game:
 
 if __name__ == "__main__":
     pass
-
-

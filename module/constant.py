@@ -17,6 +17,7 @@ MESSAGE_WIDTH = 300
 MESSAGE_X_COORD = (WIN_WIDTH - MESSAGE_WIDTH)//2
 MESSAGE_FONT_SIZE = 20
 MESSAGE_COLOR = (0, 0, 0)
+MESSAGE_FONT_COLOR = (255, 255, 255)
 MESSAGE_FONT = "verdana"
 
 # backgrounds
@@ -29,33 +30,73 @@ PLUG_UNDONE_BACKGROUND = 'image/background/plug_undone_bg.jpg'
 
 # running constants
 running = True
-MainMenuTick = 50
-LevelMenuTick = 50
-PauseMenuTick = 50
+FRAME_RATE = 60
+MainMenuTick = FRAME_RATE
+LevelMenuTick = FRAME_RATE
+PauseMenuTick = FRAME_RATE
 LevelTick = 200
-PlugTick = 50
+PlugTick = FRAME_RATE
+
+# enemy constants
+NORMAL_SPEED = 0.5
+FAST_SPEED = NORMAL_SPEED * 3 / 2
+MOTHER_SPEED = NORMAL_SPEED * 2 / 3
+MINI_SPEED = NORMAL_SPEED * 5 / 4
+BOSS_SPEED = NORMAL_SPEED / 3
+ENEMY_FONT = "verdana"
+ENEMY_FONT_SIZE = 20
+ENEMY_TOUCHED_FONT_COLOR = (255, 0, 0)
+ENEMY_FONT_COLOR = (255, 255, 255)
+ENEMY_COLOR = (255, 255, 0)
+
 
 # Messages
 PLUG_MESSAGE = ["Sorry, this place isn't ready",
-                "   Go back, please",
-                "  Level2 and Level3",
-                "  will be added soon",
+                "Go back, please",
+                "Level2 and Level3",
+                "will be added soon",
                 "",
-                "   Press any key"]
+                "Press any key"]
 
-DEATH_MESSAGE = ["  You died",
-                 "  Monsters kill you",
-                 "And soon they'll destroy",
-                 "    your home",
+PAUSE_MESSAGE = ["You should return",
+                 "They are already",
+                 "HERE",
+                 "They won't wait",
                  "",
-                 "   Press any key",
-                 "   to try again"]
+                 "Press any key",
+                 "to return to battle"
+                 "or Esc button",
+                 "to return to level menu"]
 
-WIN_MESSAGE = ["   You won",
-               "  Thread has been",
-               "    contained",
-               " But someday they'll",
-               "    RETURN",
+LOSE_MESSAGE = ["You died",
+                "Monsters killed you",
+                "And soon they'll destroy",
+                "your home",
+                "",
+                "Press any key",
+                "to try again"]
+
+WIN_MESSAGE = ["You won",
+               "Thread has been",
+               "contained",
+               "But someday they'll",
+               "RETURN",
                "",
-               "   Press any key"]
+               "Press any key"]
 
+LEVEL1 = {"commands": [
+    {"command": "delay", "time": 1000},
+    {"command": "enemy", "type": "normal", "name": "hello"},
+    {"command": "delay", "time": 500},
+    {"command": "enemy", "type": "normal", "name": "this"},
+    {"command": "delay", "time": 500},
+    {"command": "enemy", "type": "mini", "name": "is"},
+    {"command": "delay", "time": 500},
+    {"command": "enemy", "type": "mini", "name": "first"},
+    {"command": "delay", "time": 500},
+    {"command": "enemy", "type": "normal", "name": "level"}
+],
+    "background": EASY_LEVEL_BACKGROUND
+}
+
+LEVELS = [LEVEL1]
