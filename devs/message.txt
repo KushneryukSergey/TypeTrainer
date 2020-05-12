@@ -1,1 +1,3 @@
+fixes
 server part in progress
+__pycache__ folders removed
