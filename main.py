@@ -1,6 +1,5 @@
-from module.action.game_options import *
 from module.classes.state import Game
-from app import app
+from module.action.game_options import init_game
 
 
 def main():

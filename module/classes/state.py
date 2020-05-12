@@ -1,10 +1,6 @@
-from abc import ABC
-from typing import Optional
-import pygame
+from abc import ABC, abstractmethod
 import random
 import copy
-from pygame import *
-from module.constant import *
 from module.classes.objects import *
 from module.classes.enemy import *
 from module.action.game_options import get_level, set_level, surface

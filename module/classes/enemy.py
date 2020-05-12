@@ -1,7 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from pygame import *
+import pygame
+from module.action.game_options import surface
 from module.constant import *
-from module.action.game_options import *
 
 
 class Enemy(ABC):
