@@ -1,4 +1,6 @@
 from module.action.game_options import *
+from module.classes.state import Game
+from app import app
 
 
 def main():

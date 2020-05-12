@@ -32,8 +32,9 @@ Project for Technologies of Programming and Python courses in Moscow Institute o
 волны, количество врагов, их типы, наличие босса в конце
 
 ## Техническая часть
-> Требуется наличие pygame для запуска игры
-
+> Требуется наличие pygame и flask для запуска проекта
+>
+>
 > Запуск происходит командой python3 main.py
 
 

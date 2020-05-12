@@ -154,7 +154,6 @@ class LevelState(State):
     def run(self) -> State:
         self.init_clock(LevelTick)
         a = 0
-        print(LEVEL1["commands"][0]["time"])
         while running:
             self._draw()
             if self._command_index < len(self._commands):
@@ -292,6 +291,8 @@ class PlugState(State):
 # все необходимое (статистику, прошел ли игрок обучение и тп)
 class ExitState(State):
     def run(self):
+        pygame.display.quit()
+        pygame.quit()
         raise SystemExit("Thank you for playing my game!!!")
 
 

@@ -31,7 +31,6 @@ class Enemy(ABC):
         if (not self.is_killed) and letter == self._suffix[0]:
             self._prefix += letter
             self._suffix = self._suffix[1:]
-            print("|", self._suffix, "|", sep="")
             if not self._suffix:
                 self._is_killed = True
             else:
