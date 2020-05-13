@@ -1,3 +1,7 @@
+# недоделанная часть
+# по идее должна сама проверять, все ли пакеты на месте
+# и доустанавливать необходимое
+
 try:
     from pip import main as pipmain
 except ImportError:
@@ -5,9 +9,7 @@ except ImportError:
 import pkg_resources
 from packaging.version import parse
 
-required_packages = {"pygame": "0.0.0",
-                     "numpy": "0.0.0",
-                     "sympy": "0.0.0"}
+required_packages = {"pygame": "0.0.0"}
 
 
 def install(package):

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import random
 import copy
+import requests
 from module.classes.objects import *
 from module.classes.enemy import *
 from module.action.game_options import get_level, set_level, surface
@@ -66,6 +67,81 @@ class MainMenuState(State, object):
         surface().blit(self._background, (0, 0))
         for i in range(len(self._buttons)):
             self._buttons[i].draw(self._selection == i)
+        pygame.display.update()
+
+
+class LoginMenuState(State, object):
+    # отрисовка главного меню, возможность выбора кнопок выход, уровни
+
+    def __init__(self):
+        super().__init__()
+        self._selections = [2, 4, 5]
+        self._selection = 0
+        self._objects = []
+        self._background = image.load(LEVEL_MENU_BACKGROUND)
+        self._objects.append(None)  # для возможных ошибок, связанных с вводом пароля или имени
+        self._objects.append(Message(MESSAGE_X_COORD, 250, MESSAGE_WIDTH, ["Enter name:"]))
+        self._objects.append(Field(FIELD_X_COORD, 300, FIELD_WIDTH))
+        self._objects.append(Message(MESSAGE_X_COORD, 350, MESSAGE_WIDTH, ["Enter password:"]))
+        self._objects.append(Field(FIELD_X_COORD, 400, FIELD_WIDTH))
+        self._objects.append(Button(BUTTON_X_COORD, 550, BUTTON_WIDTH, BUTTON_HEIGHT,
+                                    "Enter", BUTTON_BASE_COLOR, BUTTON_SELECT_COLOR))
+
+    def run(self) -> State:
+        self.init_clock(LoginMenuTick)
+        self._draw()
+        while running:
+            for e in pygame.event.get():
+                if e.type == QUIT:
+                    return ExitState()
+                if e.type == pygame.KEYDOWN:
+                    if e.key == K_UP:
+                        self._selection = (self._selection - 1 + len(self._selections)) % len(self._selections)
+                        self._draw()
+                    elif e.key == K_DOWN:
+                        self._selection = (self._selection + 1) % len(self._selections)
+                        self._draw()
+                    elif e.key == K_RETURN:
+                        if self._selection == 2:
+                            answer = self._send_login_request()
+                            if answer == "success":
+                                return MainMenuState()
+                            elif answer == "incorrect":
+                                self._objects[0] = Message(MESSAGE_X_COORD, 0, MESSAGE_WIDTH,
+                                                           ["Error: incorrect ", "name or password"])
+                            else:
+                                self._objects[0] = Message(MESSAGE_X_COORD, 0, MESSAGE_WIDTH,
+                                                           ["Connection problems",
+                                                            "Check your internet",
+                                                            "connection"])
+                        else:
+                            self._selection = (self._selection + 1) % len(self._selections)
+                        self._draw()
+                    elif e.key == K_BACKSPACE:
+                        if self._selection < 2:
+                            self._objects[self._selections[self._selection]].delete_letter()
+                        self._draw()
+                    else:
+                        letter = pygame.key.name(e.key)
+                        if (letter.isalpha() or letter.isdigit()) and len(letter) == 1 and self._selection < 2:
+                            self._objects[self._selections[self._selection]].add_letter(letter)
+                        self._draw()
+
+    def _send_login_request(self):
+        request_to_send = {"name": self._objects[self._selections[0]].text,
+                           "pass": self._objects[self._selections[0]].text}
+        try:
+            result = requests.post(LOGIN_URL, json=request_to_send)
+        except requests.exceptions.ConnectionError as e:
+            return False
+        else:
+            return result
+
+    def _draw(self):
+        surface().blit(self._background, (0, 0))
+        for i in range(len(self._objects)):
+            if self._objects[i] is not None:
+                self._objects[i].draw(self._selections[self._selection] == i)
         pygame.display.update()
 
 

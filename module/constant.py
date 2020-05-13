@@ -1,3 +1,6 @@
+# Connection to server
+LOGIN_URL = 'http://localhost:5000/request/client_endpoint/login'
+
 # Window properties
 WIN_WIDTH = 600  # Ширина создаваемого окна
 WIN_HEIGHT = 700  # Высота
@@ -20,6 +23,14 @@ MESSAGE_COLOR = (0, 0, 0)
 MESSAGE_FONT_COLOR = (255, 255, 255)
 MESSAGE_FONT = "verdana"
 
+# Field properties
+FIELD_WIDTH = 300
+FIELD_X_COORD = (WIN_WIDTH - MESSAGE_WIDTH)//2
+FIELD_FONT_SIZE = 15
+FIELD_COLOR = (0, 0, 0)
+FIELD_FONT_COLOR = (255, 255, 255)
+FIELD_FONT = "verdana"
+
 # backgrounds
 MAIN_MENU_BACKGROUND = 'image/background/main_menu_bg.jpg'
 LEVEL_MENU_BACKGROUND = 'image/background/level_menu_bg.jpg'
@@ -34,8 +45,10 @@ FRAME_RATE = 60
 MainMenuTick = FRAME_RATE
 LevelMenuTick = FRAME_RATE
 PauseMenuTick = FRAME_RATE
+LoginMenuTick = FRAME_RATE
 LevelTick = 200
 PlugTick = FRAME_RATE
+
 
 # enemy constants
 NORMAL_SPEED = 0.5
