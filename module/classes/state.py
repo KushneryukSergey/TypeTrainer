@@ -129,13 +129,13 @@ class LoginMenuState(State, object):
 
     def _send_login_request(self):
         request_to_send = {"name": self._objects[self._selections[0]].text,
-                           "pass": self._objects[self._selections[0]].text}
+                           "pass": self._objects[self._selections[1]].text}
         try:
             result = requests.post(LOGIN_URL, json=request_to_send)
         except requests.exceptions.ConnectionError as e:
             return False
         else:
-            return result
+            return result.json()["status"]
 
     def _draw(self):
         surface().blit(self._background, (0, 0))
@@ -372,11 +372,11 @@ class Game:
     def __init__(self, state=MainMenuState()):
         self._state = state
 
-    def transition_to(self, state: State):
+    def _transition_to(self, state: State):
         self._state = state
 
     def process(self):
-        self.transition_to(self._state.run())
+        self._transition_to(self._state.run())
 
 
 if __name__ == "__main__":
