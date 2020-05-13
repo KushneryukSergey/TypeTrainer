@@ -1,3 +1,4 @@
 .idea/
 image/background/rough/
 */__pycache__
+/devs/tests.py
