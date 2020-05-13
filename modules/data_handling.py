@@ -3,8 +3,8 @@ import uuid
 from datetime import datetime
 
 
-_HIGHSCORES_CATEGORIES = ["best_time", "best_score"]
-_LEVELS = ["level1"]
+HIGHSCORES_CATEGORIES = ["best_time", "best_score"]
+LEVELS = ["level1"]
 _NEW_PLAYER = {"name": "",
                "registration_date": "",
                "highscores": {"best_time": {"level1": 100000},
@@ -16,7 +16,7 @@ _NEW_PLAYER = {"name": "",
 def update_highscores(player_id, player_highscores):
     with open("resources/players.json", "r") as highscores_data:
         highscores = json.load(highscores_data)
-    for category in _HIGHSCORES_CATEGORIES:
+    for category in HIGHSCORES_CATEGORIES:
         for level in highscores[category].keys():
             table = highscores["best_time"][level]
             table.append((player_id, player_highscores[category][level]))
@@ -87,10 +87,16 @@ def check_login(player_name, player_password):
 
 
 def get_stats(player_id):
-    with open("resources/players.json", "r+") as players_data:
+    with open("resources/players.json", "r") as players_data:
         players = json.load(players_data)
     player_stats = players.get("player_id", None)
     if player_stats is not None:
         return player_stats
     else:
         raise TypeError("There is no player with such id")
+
+
+def get_highscores():
+    with open("resources/highscores.json", "r") as highscores_data:
+        highscores = json.load(highscores_data)
+    return highscores

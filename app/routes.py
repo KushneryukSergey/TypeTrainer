@@ -61,9 +61,12 @@ def redirection():
     return redirect(url_for("homepage"))
 
 
-@app.route('/')
-def stats():
+@app.route('/statistics')
+def statistics():
     # здесь у нас статистика по игрокам
-    return "You are hero"
-
-
+    print(get_highscores()["best_time"])
+    return render_template('highscores.html',
+                           title='Highscores',
+                           categories=HIGHSCORES_CATEGORIES,
+                           levels=LEVELS,
+                           highscores=get_highscores())
