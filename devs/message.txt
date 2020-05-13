@@ -1,0 +1,3 @@
+server part added
+login, register and getting stats added
+homepage and highscores pages added

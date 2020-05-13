@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> {{ title }} - TypeTrainer </title>
+        <style>
+            body {
+                background: #0D152A url({{ url_for('static', filename='/background/homepage_background.jpg') }}) no-repeat;
+                -moz-background-size: 100%; /* Firefox 3.6+ */
+                -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+                -o-background-size: 100%; /* Opera 9.6+ */
+                background-size: 100%;
+            }
+            .boxed_parent {
+
+                width: 40%;
+	            height: 30%;
+	            margin: 2%;
+	            padding: 10px;
+	            border: 1px solid white;
+	            border-radius: 10px;
+	            margin: 10%; /* Отступы вокруг элемента */
+                background: white;
+            }
+            .boxed_child {
+                display: inline-block;
+                vertical-align: top;
+                width:90%;
+	            height:90%;
+	            padding:8%;
+	            margin: 2%;
+                font-size:80%;
+	            font-family:monospace;
+                padding:5px;
+                border: 1px solid white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="boxed_parent" style="float:right;">
+            <div class="boxed_child" style="float:center;">
+                <h1> Hail, wanderer! </h1>
+                You're on <b>TypeTrainer</b> homepage
+                Download game <a href = "https://github.com/KushneryukSergey/TypeTrainer/tree/client-master">
+                there</a> to start fight against evil
+
+                <h1> Highscores</h1>
+                You can see other defenders <a href = "{{ url_for('statistics') }}"> highscores </a>
+            </div>
+        </div>
+
+    </body>
+</html>
+
