@@ -1,6 +1,1 @@
-{"best_time": {
-  "level1": [ [10.5, "sergey"] ]
-}, "best_score": {
-  "level1": [ [100, "sergey"] ]
-}
-}
+{"best_time": {"level1": [[5000, "123456"], [7000, "234567"]]}, "best_score": {"level1": [[100, "123456"], [90, "234567"]]}}

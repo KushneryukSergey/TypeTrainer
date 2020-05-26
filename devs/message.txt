@@ -1,3 +1,3 @@
-server part added
-login, register and getting stats added
-homepage and highscores pages added
+fixes
+favicon added but can't be shown now
+review fixes

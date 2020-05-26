@@ -2,6 +2,7 @@
 <html>
     <head>
         <title> {{ title }} - TypeTrainer </title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <style>
             body {
                 background: #0D152A url({{ url_for('static', filename='/background/homepage_background.jpg') }}) no-repeat;
@@ -44,7 +45,7 @@
                 there</a> to start fight against evil
 
                 <h1> Highscores</h1>
-                You can see other defenders <a href = "{{ url_for('statistics') }}"> highscores </a>
+                You can see other defenders <a href = "{{ url_for('player_statistics') }}"> highscores </a>
             </div>
         </div>
 
