@@ -3,5 +3,6 @@ image/background/rough/
 /devs/try.py
 /dev/try.json
 */__pycache__
+__pycache__
 module/action/__pycache__
 module/classes/__pycache__
