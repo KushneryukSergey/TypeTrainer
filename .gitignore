@@ -1,6 +1,7 @@
 .idea/
 image/background/rough/
 */__pycache__
+__pycache__
 /devs/try.py
 /devs/try.json
 /.pytest_cache
