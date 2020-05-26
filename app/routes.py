@@ -38,6 +38,7 @@ def login_endpoint():
     player_id = check_login(login_info["name"], login_info["pass"])
     if player_id is None:
         answer = {"status": "incorrect"}
+        print(login_info)
     else:
         answer = {"status": "success", "stats": get_stats(player_id)}
     return jsonify(answer)
