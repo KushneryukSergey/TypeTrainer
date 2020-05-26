@@ -42,7 +42,7 @@ def login_endpoint():
         answer = {"status": "incorrect"}
         print(login_info)
     else:
-        answer = {"status": "success", "stats": get_stats(player_id)}
+        answer = {"status": "success", "stats": get_stats(player_id), "id": player_id}
     return jsonify(answer)
 
 
@@ -65,7 +65,6 @@ def page_not_found(e):
 
 @app.route('/')
 def redirection():
-    # здесь у нас главная страница проекта
     return redirect(url_for("homepage"))
 
 

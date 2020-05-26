@@ -7,9 +7,11 @@ Project for Technologies of Programming and Python courses in Moscow Institute o
 
 Информация о игре находится [здесь](https://github.com/KushneryukSergey/TypeTrainer)
 
-Информация о клиентской части [здесь](https://github.com/KushneryukSergey/TypeTrainer/tree/client-master)
+Информация о клиентской части [здесь](https://github.com/KushneryukSergey/TypeTrainer/tree/client)
 
 ##### 1. Требуется наличие pygame для запуска игры
 ##### 2. Запуск происходит командой python3 main.py в обеих частях
 
-> **Без запуска серверной части зарегистрироваться и войти в игру вы не сможете** 
+> **Без запуска серверной части войти в игру вы не сможете** 
+
+> Чтобы опробовать игру запустите сервер, саму игру. Сейчас доступен вход по (login, password) = (admin, password)
