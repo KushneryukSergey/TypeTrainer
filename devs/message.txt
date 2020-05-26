@@ -1,2 +1,1 @@
-interaction with server updated
-__pycache__ folders and other extra files removed
+color fixed
