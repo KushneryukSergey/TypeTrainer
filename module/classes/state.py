@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 import random
 import copy
-import requests
+from requests import post as post_request
+from requests.exceptions import ConnectionError as connectionError
 from module.classes.objects import *
 from module.classes.enemy import *
 from module.action.game_options import get_level, set_level, surface
@@ -131,8 +132,8 @@ class LoginMenuState(State, object):
         request_to_send = {"name": self._objects[self._selections[0]].text,
                            "pass": self._objects[self._selections[1]].text}
         try:
-            result = requests.post(LOGIN_URL, json=request_to_send)
-        except requests.exceptions.ConnectionError as e:
+            result = post_request(LOGIN_URL, json=request_to_send)
+        except connectionError as e:
             return False
         else:
             return result.json()["status"]
