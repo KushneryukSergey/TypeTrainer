@@ -1,4 +1,2 @@
 fixes
-favicon added but can't be shown now
-review fixes
-unittests added
+data_base fixed
