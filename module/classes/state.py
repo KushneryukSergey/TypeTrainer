@@ -5,7 +5,8 @@ from requests import post as post_request
 from requests.exceptions import ConnectionError as connectionError
 from module.classes.objects import *
 from module.classes.enemy import *
-from module.action.game_options import get_level, set_level, surface
+from module.action.game_options import get_level, set_level, surface,\
+    save_stats, send_stats, send_login_request
 
 
 class Game:
@@ -104,7 +105,8 @@ class LoginMenuState(State, object):
                         self._draw()
                     elif e.key == K_RETURN:
                         if self._selection == 2:
-                            answer = self._send_login_request()
+                            answer = send_login_request(self._objects[self._selections[0]].text,
+                                                        self._objects[self._selections[1]].text)
                             if answer == "success":
                                 return MainMenuState()
                             elif answer == "incorrect":
@@ -127,16 +129,6 @@ class LoginMenuState(State, object):
                         if (letter.isalpha() or letter.isdigit()) and len(letter) == 1 and self._selection < 2:
                             self._objects[self._selections[self._selection]].add_letter(letter)
                         self._draw()
-
-    def _send_login_request(self):
-        request_to_send = {"name": self._objects[self._selections[0]].text,
-                           "pass": self._objects[self._selections[1]].text}
-        try:
-            result = post_request(LOGIN_URL, json=request_to_send)
-        except connectionError as e:
-            return False
-        else:
-            return result.json()["status"]
 
     def _draw(self):
         surface().blit(self._background, (0, 0))
@@ -364,6 +356,7 @@ class PlugState(State):
 # все необходимое (статистику, прошел ли игрок обучение и тп)
 class ExitState(State):
     def run(self):
+        send_stats()
         pygame.display.quit()
         pygame.quit()
         raise SystemExit("Thank you for playing my game!!!")

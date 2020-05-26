@@ -1,5 +1,8 @@
 # Connection to server
 LOGIN_URL = 'http://localhost:5000/request/client_endpoint/login'
+SAVE_STATS_URL = 'http://localhost:5000/request/client_endpoint/save_stats'
+
+STATS_PATH = "resources/player_info.json"
 
 # Window properties
 WIN_WIDTH = 600  # Ширина создаваемого окна

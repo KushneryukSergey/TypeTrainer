@@ -1,2 +1,1 @@
-interaction with server added
-login state added
+interaction with server updated
